@@ -290,6 +290,8 @@ namespace Pc_Specs_with_screen_reader_
                         extraLines.Add($"CPU ({_cpuVendor}) Temp: Unknown");
                     }
 
+                    extraLines.Add(string.Empty);
+
                     // GPU temp
                     if (_lastGpuTempC.HasValue)
                     {
