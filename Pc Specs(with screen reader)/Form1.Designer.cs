@@ -106,7 +106,6 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Black;
             ClientSize = new Size(602, 363);
-            MinimumSize = MaximumSize = Size;
             Controls.Add(infoLabel);
             Controls.Add(loadButton);
             Controls.Add(screenReaderButton);
