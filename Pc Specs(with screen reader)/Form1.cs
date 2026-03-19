@@ -378,6 +378,7 @@ namespace Pc_Specs_with_screen_reader_
             _baseInfoText = string.Join(Environment.NewLine, new[]
             {
                 $"Monitor: {monitorBrand} - {monitor} - {resolution} @ {hertz}Hz",
+                string.Empty,
                 $"Motherboard: {mb}",
                 string.Empty,
                 $"CPU: {cpu}",
