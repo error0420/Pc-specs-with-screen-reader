@@ -105,7 +105,8 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Black;
-            ClientSize = new Size(636, 370);
+            ClientSize = new Size(602, 363);
+            MinimumSize = MaximumSize = Size;
             Controls.Add(infoLabel);
             Controls.Add(loadButton);
             Controls.Add(screenReaderButton);
@@ -114,6 +115,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
+            MinimizeBox = true;
             Name = "Form1";
             Text = "Pc Specs";
             ResumeLayout(false);
