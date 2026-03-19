@@ -96,7 +96,7 @@
             updateButton.Name = "updateButton";
             updateButton.Size = new Size(150, 30);
             updateButton.TabIndex = 4;
-            updateButton.Text = "Check / Update";
+            updateButton.Text = "Latest Source Code";
             updateButton.UseVisualStyleBackColor = false;
             updateButton.Click += updateButton_Click;
             // 

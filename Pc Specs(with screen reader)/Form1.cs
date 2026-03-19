@@ -25,8 +25,6 @@ namespace Pc_Specs_with_screen_reader_
         private float? _lastGpuTempC;
         // removed logging fields (_logWriter/_logging/_logFilePath)
         private string _cpuVendor = "Unknown";
-        private bool _showScreenReaderStatus = false;
-        private bool _showTempUnitStatus = false;
         private bool _showLoadStatus = false;
         private string? _baseInfoText;
         // Update settings
@@ -113,7 +111,7 @@ namespace Pc_Specs_with_screen_reader_
         private void tempUnitButton_Click(object? sender, EventArgs e)
         {
             _useFahrenheit = !_useFahrenheit;
-            _showTempUnitStatus = true;
+            tempUnitButton.Text = _useFahrenheit ? "Show °C" : "Show °F";
             UpdateTempLabels();
             RefreshInfoLabel();
         }
@@ -154,7 +152,7 @@ namespace Pc_Specs_with_screen_reader_
                 if (!string.Equals(remoteVersion, CurrentVersion, StringComparison.OrdinalIgnoreCase))
                 {
                     AppendUpdateLog($"Update available: local={CurrentVersion}, remote={remoteVersion}");
-                    try { this.Invoke((MethodInvoker)(() => MessageBox.Show($"Update available: {remoteVersion}. Click 'Check / Update' to download.", "Update Available", MessageBoxButtons.OK, MessageBoxIcon.Information))); } catch { }
+                    try { this.Invoke((MethodInvoker)(() => MessageBox.Show($"Update available: {remoteVersion}. Click 'Latest Source Code' to download.", "Update Available", MessageBoxButtons.OK, MessageBoxIcon.Information))); } catch { }
                 }
                 else
                 {
@@ -234,7 +232,7 @@ namespace Pc_Specs_with_screen_reader_
                     Directory.CreateDirectory(extractDir);
                     ZipFile.ExtractToDirectory(zipPath, extractDir);
                     AppendUpdateLog($"Update downloaded and extracted to {extractDir}");
-                    try { this.Invoke((MethodInvoker)(() => MessageBox.Show($"Update downloaded to:\n{extractDir}", "Update Downloaded", MessageBoxButtons.OK, MessageBoxIcon.Information))); } catch { }
+                    try { this.Invoke((MethodInvoker)(() => MessageBox.Show($"Downloaded the latest source code.\nSaved to:\n{extractDir}", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information))); } catch { }
                 }
                 catch (Exception ex)
                 {
@@ -308,13 +306,7 @@ namespace Pc_Specs_with_screen_reader_
                     // CPU utilization removed to avoid extra WMI calls that may cause lag
                 }
 
-                var statusLines = new List<string>();
-                if (_showLoadStatus) statusLines.Add("Action: Load Specs");
-                if (_showScreenReaderStatus) statusLines.Add($"Screen Reader: {(_screenReaderEnabled ? "On" : "Off")}");
-                if (_showTempUnitStatus) statusLines.Add($"Temperature Unit: {(_useFahrenheit ? "°F" : "°C")}");
-
                 if (extraLines.Count > 0) parts.Add(string.Join(Environment.NewLine, extraLines));
-                if (statusLines.Count > 0) parts.Add(string.Join(Environment.NewLine, statusLines));
 
                 infoLabel.Text = parts.Count > 0 ? string.Join(Environment.NewLine + Environment.NewLine, parts) : string.Empty;
             }
@@ -361,6 +353,16 @@ namespace Pc_Specs_with_screen_reader_
 
         private void loadButton_Click(object sender, EventArgs e)
         {
+            // Toggle: if specs are showing, hide them
+            if (_showLoadStatus)
+            {
+                _showLoadStatus = false;
+                _baseInfoText = null;
+                loadButton.Text = "Load Specs";
+                RefreshInfoLabel();
+                return;
+            }
+
             // show immediate feedback
             infoLabel.Text = "Displaying specs...";
             infoLabel.Refresh();
@@ -386,6 +388,7 @@ namespace Pc_Specs_with_screen_reader_
             });
 
             _showLoadStatus = true;
+            loadButton.Text = "Hide Specs";
             RefreshInfoLabel();
 
             // Temperatures will be updated live by the timer
@@ -592,8 +595,7 @@ namespace Pc_Specs_with_screen_reader_
         private void screenReaderButton_Click(object? sender, EventArgs e)
         {
             _screenReaderEnabled = !_screenReaderEnabled;
-            _showScreenReaderStatus = true;
-            RefreshInfoLabel();
+            screenReaderButton.Text = _screenReaderEnabled ? "Screen Reader: On" : "Screen Reader: Off";
             if (_screenReaderEnabled)
             {
                 if (_synth == null)
