@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RootNamespace>Pc_Specs_with_screen_reader_</RootNamespace>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Management" Version="10.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Speech" Version="6.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.7-pre642" />
+  </ItemGroup>
+
+  <!-- Optional: enable AutoPushToGit by setting AutoPushToGit to true in the project file or via msbuild properties -->
+  <PropertyGroup>
+    <AutoPushToGit>false</AutoPushToGit>
+    <GitCommitMessage>Auto build commit</GitCommitMessage>
+  </PropertyGroup>
+
+  <Target Name="AutoPushToGit" AfterTargets="Build" Condition="'$(AutoPushToGit)'=='true'">
+    <!-- Ensure git is available and configured with credentials on the build machine -->
+    <Exec Command="git add -A" WorkingDirectory="$(ProjectDir)" />
+    <Exec Command="git commit -m &quot;$(GitCommitMessage)&quot;" WorkingDirectory="$(ProjectDir)" ContinueOnError="true" />
+    <Exec Command="git push" WorkingDirectory="$(ProjectDir)" ContinueOnError="true" />
+  </Target>
+
+</Project>
