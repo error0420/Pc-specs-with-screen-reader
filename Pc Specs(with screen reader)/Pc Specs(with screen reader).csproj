@@ -19,17 +19,19 @@
     <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.7-pre642" />
   </ItemGroup>
 
-  <!-- Optional: enable AutoPushToGit by setting AutoPushToGit to true in the project file or via msbuild properties -->
+  <!-- Auto-push to GitHub after every successful build -->
   <PropertyGroup>
-    <AutoPushToGit>false</AutoPushToGit>
+    <GitExe>C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\Git\cmd\git.exe</GitExe>
     <GitCommitMessage>Auto build commit</GitCommitMessage>
   </PropertyGroup>
 
-  <Target Name="AutoPushToGit" AfterTargets="Build" Condition="'$(AutoPushToGit)'=='true'">
-    <!-- Ensure git is available and configured with credentials on the build machine -->
-    <Exec Command="git add -A" WorkingDirectory="$(ProjectDir)" />
-    <Exec Command="git commit -m &quot;$(GitCommitMessage)&quot;" WorkingDirectory="$(ProjectDir)" ContinueOnError="true" />
-    <Exec Command="git push" WorkingDirectory="$(ProjectDir)" ContinueOnError="true" />
+  <Target Name="AutoPushToGit" AfterTargets="Build">
+    <!-- Stage all changes from the solution root (one level up from ProjectDir) -->
+    <Exec Command="&quot;$(GitExe)&quot; add -A" WorkingDirectory="$(SolutionDir)" ContinueOnError="true" />
+    <!-- Commit only if there are staged changes (exit code 1 = nothing to commit, that's OK) -->
+    <Exec Command="&quot;$(GitExe)&quot; commit -m &quot;$(GitCommitMessage)&quot;" WorkingDirectory="$(SolutionDir)" ContinueOnError="true" />
+    <!-- Push to origin main -->
+    <Exec Command="&quot;$(GitExe)&quot; push origin main" WorkingDirectory="$(SolutionDir)" ContinueOnError="true" />
   </Target>
 
 </Project>
